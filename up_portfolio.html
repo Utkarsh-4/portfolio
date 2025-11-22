@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utkarsh Patil | Automation Architect</title>
+    <meta name="description" content="Portfolio of Utkarsh Patil - Software Consultant & Backend Developer.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. RESET & VARIABLES --- */
+        :root {
+            --bg-core: #050505;
+            --bg-card: #0a0a0a;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(255, 255, 255, 0.2);
+            
+            --primary: #ffffff;
+            --secondary: #888888;
+            --accent: #ccff00; /* Tech Green */
+            
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --spacing-container: max(5vw, 2rem);
+            --grid-gap: 2rem;
+            
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            cursor: none; /* Custom cursor active */
+        }
+
+        body {
+            background-color: var(--bg-core);
+            color: var(--primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+            /* Technical Grid Background Pattern */
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 100px 100px;
+            background-position: center top;
+        }
+
+        /* --- 2. CUSTOM CURSOR --- */
+        .cursor-dot {
+            width: 8px; height: 8px; background: var(--accent);
+            position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s;
+        }
+        .cursor-ring {
+            width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3);
+            position: fixed; border-radius: 50%; pointer-events: none; z-index: 9998;
+            transform: translate(-50%, -50%); transition: 0.15s var(--ease);
+        }
+        body:hover .cursor-dot { opacity: 1; }
+        body:hover .cursor-ring { opacity: 1; }
+        
+        /* Hover State */
+        body.hovering .cursor-ring { width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-color: transparent; backdrop-filter: blur(2px); }
+
+        /* --- 3. LAYOUT UTILITIES --- */
+        .container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-container);
+        }
+
+        .section-pad { padding: 140px 0; }
+        
+        .grid-wrapper {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--grid-gap);
+        }
+
+        .col-12 { grid-column: span 12; }
+        .col-6 { grid-column: span 6; }
+        .col-4 { grid-column: span 4; }
+        
+        /* Typography */
+        h1, h2, h3, .nav-logo { font-family: var(--font-display); color: var(--primary); }
+        
+        h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 2rem;
+        }
+
+        h2 { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 500; margin-bottom: 3rem; }
+        
+        .subtitle {
+            font-size: clamp(1rem, 1.5vw, 1.25rem);
+            color: var(--secondary);
+            max-width: 32ch;
+            margin-left: auto; /* Align right in some contexts */
+        }
+
+        .tag {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* --- 4. NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 2rem var(--spacing-container);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; }
+
+        .nav-menu a {
+            color: var(--secondary);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        .nav-menu a:hover { color: var(--primary); }
+
+        /* --- 5. HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--grid-gap);
+            width: 100%;
+            align-items: end;
+        }
+
+        .hero-title-area { grid-column: 1 / 9; }
+        .hero-desc-area { grid-column: 9 / -1; padding-bottom: 1rem; }
+
+        /* --- 6. PROJECTS (Spotlight Grid) --- */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px; /* Tighter gap for card effect */
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s var(--ease);
+            height: 100%; /* Ensures equal height */
+        }
+
+        .card:hover { transform: translateY(-5px); z-index: 2; }
+
+        /* Spotlight Effect */
+        .card::before, .card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        /* Glow Gradient */
+        .card::before {
+            background: radial-gradient(
+                800px circle at var(--mouse-x) var(--mouse-y),
+                rgba(255, 255, 255, 0.04),
+                transparent 40%
+            );
+            z-index: 1;
+        }
+
+        /* Border Glow */
+        .card::after {
+            background: radial-gradient(
+                600px circle at var(--mouse-x) var(--mouse-y),
+                rgba(204, 255, 0, 0.1),
+                transparent 40%
+            );
+            z-index: 3;
+            mix-blend-mode: screen;
+        }
+
+        .card:hover::before, .card:hover::after { opacity: 1; }
+
+        .card-inner { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
+        
+        .project-num { font-family: var(--font-display); color: var(--border-active); font-size: 3rem; margin-bottom: 1rem; line-height: 1; }
+        .project-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .project-tech { color: var(--accent); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 1.5rem; letter-spacing: 0.5px; }
+        .project-desc { font-size: 1rem; color: var(--secondary); margin-bottom: 2rem; flex-grow: 1; }
+        
+        .stat-badge {
+            display: inline-flex;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--primary);
+            align-self: flex-start;
+        }
+
+        /* --- 7. EXPERIENCE TABLE --- */
+        .experience-table {
+            border-top: 1px solid var(--border-color);
+        }
+
+        .exp-row {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--grid-gap);
+            padding: 2.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+            align-items: start;
+        }
+        
+        .exp-row:hover { background-color: rgba(255,255,255,0.02); }
+        
+        .exp-date { grid-column: 1 / 3; color: var(--secondary); font-family: var(--font-display); }
+        .exp-role { grid-column: 3 / 6; font-size: 1.25rem; font-weight: 500; }
+        .exp-details { grid-column: 6 / -1; color: var(--secondary); }
+
+        /* --- 8. FOOTER --- */
+        footer {
+            padding: 5rem var(--spacing-container);
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-card);
+            text-align: center;
+        }
+        
+        .cta-btn {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 1.5rem 3rem;
+            border: 1px solid var(--border-color);
+            color: var(--primary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            font-family: var(--font-display);
+            font-weight: 600;
+        }
+        .cta-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        /* --- MOBILE --- */
+        @media (max-width: 1024px) {
+            .col-6 { grid-column: span 12; }
+            .hero-title-area { grid-column: 1 / -1; }
+            .hero-desc-area { grid-column: 1 / -1; padding-top: 2rem; margin-left: 0; }
+            .exp-row { grid-template-columns: 1fr; gap: 1rem; }
+            .exp-date, .exp-role, .exp-details { grid-column: 1 / -1; }
+            .subtitle { margin-left: 0; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+
+    <nav>
+        <div class="nav-logo">UP<span style="color:var(--accent)">.</span></div>
+        <div class="nav-menu">
+            <a href="#work" class="hover-target">Work</a>
+            <a href="#experience" class="hover-target">Bio</a>
+            <a href="#contact" class="hover-target">Contact</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-title-area">
+                    <span class="tag">Portfolio 2025</span>
+                    <h1>Automation<br>Architect</h1>
+                </div>
+                <div class="hero-desc-area">
+                    <p class="subtitle">
+                        I am Utkarsh Patil. A Software Consultant & Backend Developer helping enterprises build self-healing infrastructure.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="work" class="section-pad">
+        <div class="container">
+            <div class="grid-wrapper" style="margin-bottom: 4rem;">
+                <div class="col-6">
+                    <h2>Selected<br>Projects</h2>
+                </div>
+                <div class="col-6" style="align-self: end; text-align: right;">
+                    <p style="color:var(--secondary);">7 Systems Deployed</p>
+                </div>
+            </div>
+
+            <div class="project-grid" id="cards-container">
+                
+                <article class="card hover-target">
+                    <div class="card-inner">
+                        <div class="project-num">01</div>
+                        <h3 class="project-title">MegaCLI Framework</h3>
+                        <div class="project-tech">Node.js • Shell • GitLab API</div>
+                        <p class="project-desc">Enterprise automation framework. Automates report patching, exporting, importing, and code syncing.</p>
+                        <span class="stat-badge">Time: 2hrs → 10s</span>
+                    </div>
+                </article>
+
+                <article class="card hover-target">
+                    <div class="card-inner">
+                        <div class="project-num">02</div>
+                        <h3 class="project-title">JMeter Auto Engine</h3>
+                        <div class="project-tech">JMeter • Node • CI/CD</div>
+                        <p class="project-desc">Automated performance runner with env selection and auto-generated HTML reports.</p>
+                        <span class="stat-badge">100% Automated</span>
+                    </div>
+                </article>
+
+                <article class="card hover-target">
+                    <div class="card-inner">
+                        <div class="project-num">03</div>
+                        <h3 class="project-title">Banking Autofactory</h3>
+                        <div class="project-tech">Node.js • Oracle SQL</div>
+                        <p class="project-desc">Automated full configuration & environment setup for complex banking product maps.</p>
+                        <span class="stat-badge">Setup: 6hrs → Mins</span>
+                    </div>
+                </article>
+
+                <article class="card hover-target">
+                    <div class="card-inner">
+                        <div class="project-num">04</div>
+                        <h3 class="project-title">DevOps Micro-Suite</h3>
+                        <div class="project-tech">Docker • GitLab CI</div>
+                        <p class="project-desc">Suite for automated tagging, Docker image generation, and deployment validation.</p>
+                        <span class="stat-badge">Reliability++</span>
+                    </div>
+                </article>
+
+                <article class="card hover-target">
+                    <div class="card-inner">
+                        <div class="project-num">05</div>
+                        <h3 class="project-title">ConfigSync</h3>
+                        <div class="project-tech">Node.js • Express</div>
+                        <p class="project-desc">Differential tool to compare multi-env configurations and highlight discrepancies.</p>
+                        <span class="stat-badge">Zero Config Bugs</span>
+                    </div>
+                </article>
+
+                <article class="card hover-target">
+                    <div class="card-inner">
+                        <div class="project-num">06</div>
+                        <h3 class="project-title">Perf Dashboard</h3>
+                        <div class="project-tech">Node.js • Vue.js</div>
+                        <p class="project-desc">Centralized dashboard for latency, errors, logs, and JMeter test results.</p>
+                        <span class="stat-badge">Real-time Data</span>
+                    </div>
+                </article>
+
+                <article class="card hover-target">
+                    <div class="card-inner">
+                        <div class="project-num">07</div>
+                        <h3 class="project-title">Test Orchestrator</h3>
+                        <div class="project-tech">Selenium • Mocha</div>
+                        <p class="project-desc">Configurable test engine supporting retries, parallel execution, and reporting.</p>
+                        <span class="stat-badge">Rapid Regression</span>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="section-pad">
+        <div class="container">
+            <h2 style="margin-bottom: 4rem;">Professional Timeline</h2>
+            
+            <div class="experience-table">
+                
+                <div class="exp-row hover-target">
+                    <div class="exp-date">Current</div>
+                    <div class="exp-role">Software Consultant</div>
+                    <div class="exp-details">
+                        Specializing in Backend Architecture and Automation. Leading initiatives to modernize legacy workflows and build custom CLI tools.
+                    </div>
+                </div>
+
+                <div class="exp-row hover-target">
+                    <div class="exp-date">Previous</div>
+                    <div class="exp-role">Backend Developer</div>
+                    <div class="exp-details">
+                        Developed Node.js microservices and optimized Oracle SQL queries for high-volume banking transactions.
+                    </div>
+                </div>
+
+                <div class="exp-row hover-target">
+                    <div class="exp-date">3+ Years</div>
+                    <div class="exp-role">Total Experience</div>
+                    <div class="exp-details">
+                        Delivering critical infrastructure solutions in regulated financial environments.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <h2 style="font-size: clamp(2rem, 5vw, 4rem);">Ready to Automate?</h2>
+            <p style="color: var(--secondary);">Let's build something robust.</p>
+            <a href="mailto:utkarshpatil214@gmail.com" class="cta-btn hover-target">Get in Touch</a>
+            <div style="margin-top: 4rem; font-size: 0.8rem; color: var(--secondary); opacity: 0.5;">
+                &copy; 2025 Utkarsh Patil. System Operational.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- CURSOR LOGIC ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorRing = document.querySelector('.cursor-ring');
+        
+        window.addEventListener('mousemove', e => {
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            cursorDot.style.left = `${x}px`;
+            cursorDot.style.top = `${y}px`;
+            
+            // Slight delay for ring
+            cursorRing.animate({
+                left: `${x}px`,
+                top: `${y}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        document.querySelectorAll('.hover-target').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // --- SPOTLIGHT CARD LOGIC ---
+        const cardsContainer = document.getElementById("cards-container");
+        const cards = document.querySelectorAll(".card");
+
+        cardsContainer.onmousemove = e => {
+            for(const card of cards) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                card.style.setProperty("--mouse-x", `${x}px`);
+                card.style.setProperty("--mouse-y", `${y}px`);
+            };
+        };
+
+        // --- SCROLL ANIMATIONS ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card, .exp-row, h1, h2').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
